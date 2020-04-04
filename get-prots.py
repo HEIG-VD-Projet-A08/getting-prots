@@ -4,17 +4,23 @@ import csv
 import os
 
 name = str(sys.argv[1])
+
+size = sys.argv[2]
+nameData = "Data_" + str(size) + ".txt"
 nameFile = name + ".txt"
 path = "./"
 
 
-fileExists = os.path.isfile(path + nameFile)
+dataExists = os.path.isfile(path + nameData)
 
-if not fileExists:
-	file = open(nameFile, "w")
+
+if dataExists:
+	print("File already exists.")
+else:
+	file = open(nameData, "w")
 
 	print("Getting data...")
-	r = requests.get('https://www.uniprot.org/uniprot/?query=&sort=score&columns=id,length,comment(SUBCELLULAR LOCATION)&format=tab&limit=10')
+	r = requests.get("https://www.uniprot.org/uniprot/?query=&sort=score&columns=id,length,comment(SUBCELLULAR LOCATION)&format=tab&limit="+ str(size))
 	print("Status of the request: " + str(r.status_code))
 
 
@@ -22,8 +28,8 @@ if not fileExists:
 	file.close()
 
 
-file = open(name + ".txt", "r+")
-csv_file = open("test.txt", "w")
+file = open(nameData, "r+")
+csv_file = open(nameFile, "w")
 list_of_prots = list(csv.reader(file, delimiter='\t'))
 
 
@@ -41,5 +47,3 @@ for item in list_of_prots:
 
 file.close()
 csv_file.close()
-
-
